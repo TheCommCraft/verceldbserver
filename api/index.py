@@ -41,7 +41,7 @@ class DBDict:
         if item is None:
             return False
         return True
-    def get(key, default=None):
+    def get(self, key, default=None):
         item = self.data.get(key) or self.coll.find_one({"domain": key})
         self.data[key] = item
         if item is None:
