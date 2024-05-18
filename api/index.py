@@ -11,7 +11,7 @@ def home():
 
 @app.route('/about/')
 def about():
-    return f'{tld_server.domains}'
+    return str(tld_server.domains)
 
 domains = {}
 
