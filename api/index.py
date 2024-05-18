@@ -1,7 +1,7 @@
 from warp.host import TLDServer
 from flask import Flask, request
 from threading import Thread
-import time, requests
+import time, requests, secrets
 
 app = Flask(__name__)
 
@@ -15,5 +15,6 @@ def about():
 
 domains = {}
 
-tld_server = TLDServer(app=app, tlds=["site"], domains=domains)
-tld_server.add_domain(domain_name="domain.site", key=1234567890, owner="test")
+tld_server = TLDServer(app=app, tlds=["site", "tcc"], domains=domains)
+tld_server.add_domain(domain_name="home.site", key=secrets.randbits(256), owner="warp-project", ip="warp.thecommcraft.de")
+tld_server.add_domain(domain_name="home.tcc", key=secrets.randbits(256), owner="thecommcraft", ip="thecommcraft.de")
