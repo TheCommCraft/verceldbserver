@@ -48,5 +48,3 @@ class DBDict:
 dbdict = DBDict(domains)
 
 tld_server = TLDServer(app=app, tlds=["site", "tcc"], domains=dbdict)
-tld_server.add_domain(domain_name="home.site", key=secrets.token_urlsafe(32), owner="warp-project", ip="warp.thecommcraft.de")
-tld_server.add_domain(domain_name="home.tcc", key=secrets.token_urlsafe(32), owner="thecommcraft", ip="thecommcraft.de")
