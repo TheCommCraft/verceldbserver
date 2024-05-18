@@ -20,7 +20,7 @@ def home():
 def about():
     return str(tld_server.domains)
 
-@app.post('/new_domain/<domain_name>')
+@app.post('/new_domain/<domain_name>/')
 def new_domain(domain_name):
     data = request.json
     key = data.get("access_key")
