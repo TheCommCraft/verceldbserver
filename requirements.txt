@@ -1,3 +1,3 @@
 Flask
 requests
-warp-python==1.2.2
+warp-python>=1.2.2
