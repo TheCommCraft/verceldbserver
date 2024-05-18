@@ -25,7 +25,7 @@ domains = db["domains"]
 class DBDict:
     def __init__(self, coll):
         self.coll = coll
-        self.data = {}´
+        self.data = {}
     def __getitem__(self, key):
         item = self.get(key)
         if item is None:
