@@ -16,3 +16,4 @@ def about():
 domains = {}
 
 tld_server = TLDServer(app=app, tlds=["site"], domains=domains)
+tld_server.add_domain(domain_name="domain.site", key=12345678, owner="test")
