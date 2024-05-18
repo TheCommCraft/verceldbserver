@@ -25,26 +25,28 @@ domains = db["domains"]
 class DBDict:
     def __init__(self, coll):
         self.coll = coll
+        self.data = {}´
     def __getitem__(self, key):
-        item = self.coll.find_one({"domain": key})
+        item = self.get(key)
         if item is None:
             raise KeyError
         return item
     def __setitem__(self, key, value):
         value = value.copy()
         value["domain"] = key
+        self.data[key] = value
         self.coll.replace_one({"domain": key}, value, upsert=True)
     def __contains__(self, key):
-        item = self.coll.find_one({"domain": key})
+        item = self.get(key)
         if item is None:
             return False
         return True
     def get(key, default):
-        item = self.coll.find_one({"domain": key})
+        item = self.data.get(key) or self.coll.find_one({"domain": key})
+        self.data[key] = item
         if item is None:
             return default
         return item
 
 dbdict = DBDict(domains)
-
 tld_server = TLDServer(app=app, tlds=["site", "tcc"], domains=dbdict)
