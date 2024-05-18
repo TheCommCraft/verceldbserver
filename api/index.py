@@ -3,6 +3,8 @@ from flask import Flask, request
 from threading import Thread
 import time, requests, secrets
 
+password = ""
+uri = f"mongodb+srv://thecommcraft:{password}@cluster0.7xdht5m.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 app = Flask(__name__)
 
 @app.route('/')
@@ -14,6 +16,7 @@ def about():
     return str(tld_server.domains)
 
 domains = {}
+
 
 tld_server = TLDServer(app=app, tlds=["site", "tcc"], domains=domains)
 tld_server.add_domain(domain_name="home.site", key=secrets.randbits(256), owner="warp-project", ip="warp.thecommcraft.de")
