@@ -31,6 +31,8 @@ class DBDict:
             raise KeyError
         return item
     def __setitem__(self, key, value):
+        value = value.copy()
+        value["domain"] = key
         self.coll.replace_one({"domain": key}, value, upsert=True)
     def __contains__(self, key):
         item = self.coll.find_one({"domain": key})
