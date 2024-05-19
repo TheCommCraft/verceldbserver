@@ -70,4 +70,4 @@ tld_server = TLDServer(app=app, tlds=["site", "tcc"], domains=dbdict)
 
 @tld_server.on("set_domain_ip")
 def on_set_ip(event):
-    dbdict.coll.update_one({"domain": event.domain_name}, {"ip": event.ip})
+    dbdict.coll.update_one({"domain": event.domain_name}, {"$set": {"ip": event.ip}})
