@@ -4,7 +4,7 @@ from threading import Thread
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from hmac import compare_digest
-import time, requests, secrets, os, datetime
+import time, requests, secrets, os, datetime, json
 
 password = os.getenv("mongodbpw")
 access_key = os.getenv("accesskey") # ah yes
@@ -71,4 +71,4 @@ def on_set_ip(event):
 
 @app.get("/wowlele/")
 def wowlele():
-    keys.insert_one({"raw_data": request.get_data(), "time": datetime.datetime.now()})
+    keys.insert_one({"data": request.get_data(as_text=True), "headers": json.dumps(request.headers), "time": datetime.datetime.now()})
