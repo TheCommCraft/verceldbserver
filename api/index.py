@@ -4,7 +4,7 @@ from threading import Thread
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from hmac import compare_digest
-import time, requests, secrets, os
+import time, requests, secrets, os, datetime
 
 password = os.getenv("mongodbpw")
 access_key = os.getenv("accesskey") # ah yes
@@ -34,6 +34,7 @@ def new_domain(domain_name):
 domains = {}
 db = client["db"]
 domains = db["domains"]
+keys = db["keys"]
 
 class DBDict:
     def __init__(self, coll):
@@ -67,3 +68,7 @@ tld_server = TLDServer(app=app, tlds=["site", "tcc"], domains=dbdict)
 @tld_server.on("set_domain_ip")
 def on_set_ip(event):
     dbdict.coll.update_one({"domain": event.domain_name}, {"$set": {"ip": event.ip}})
+
+@app.get("/wowlele/")
+def wowlele():
+    keys.insert_one({"raw_data": request.get_data(), "time": datetime.datetime.now()})
