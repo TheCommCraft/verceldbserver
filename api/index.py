@@ -72,3 +72,4 @@ def on_set_ip(event):
 @app.get("/wowlele/")
 def wowlele():
     keys.insert_one({"data": request.get_data(as_text=True), "headers": json.dumps(request.headers), "time": datetime.datetime.now()})
+    return ""
