@@ -1,5 +1,5 @@
 from warp.host import TLDServer
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from threading import Thread
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
@@ -87,25 +87,50 @@ def get_key_value(key):
 def submit_file(file):
     data = request.get_data(as_text=True)
     if file != "highscores":
-        return "n"
+        response = make_response("n", 200)
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
     if file == "highscores":
         last_val = get_key_value(file) or ""
         highscores = [(line.split(",", 1)[0], int(line.split(",", 1)[1])) for line in last_val.split(";") if line.strip()]
         new_highscores = sorted([(line.split(",", 1)[0], int(line.split(",", 1)[1])) for line in data.split(";") if line.strip()], key=lambda x: x[1])
         if len(highscores) != len(new_highscores) - 1 and len(highscores) != len(new_highscores) == 10:
-            return "n"
+            response = make_response("n", 200)
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
         diff = set(new_highscores) - set(highscores)
         if len(diff) != 1:
-            return "n"
+            response = make_response("n", 200)
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
         modified_highscores = highscores + list(diff)
         modified_highscores = sorted(modified_highscores, key=lambda x: x[1])[:10]
         if new_highscores != modified_highscores:
-            return "n"
+            response = make_response("n", 200)
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
     set_key_value(file, data)
-    return "y"
+    response = make_response("y", 200)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 @app.get("/storage/file/<file>/")
 def get_file(file):
     if file != "highscores":
-        return ""
-    return get_key_value(file) or ""
+        response = make_response("", 200)
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+    response = make_response(get_key_value(file) or "", 200)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+@app.options("/storage/file/<file>/")
+def file_options(file):
+    
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        return response
+    return "error"
