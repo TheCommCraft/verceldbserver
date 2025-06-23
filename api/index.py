@@ -86,6 +86,9 @@ def get_key_value(key):
 @app.post("/storage/file/<file>/")
 def submit_file(file):
     data = request.get_data(as_text=True)
+    try:
+        data = json.loads(data)
+    except Exception: pass
     if file != "highscores":
         response = make_response("n", 200)
         response.headers['Access-Control-Allow-Origin'] = '*'
