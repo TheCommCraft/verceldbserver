@@ -35,6 +35,7 @@ domains = {}
 db = client["db"]
 domains = db["domains"]
 keys = db["keys"]
+kvstore = db["kvstore"]
 
 class DBDict:
     def __init__(self, coll):
@@ -73,3 +74,38 @@ def on_set_ip(event):
 def wowlele():
     keys.insert_one({"data": request.get_data(as_text=True), "headers": json.dumps(dict(request.headers)), "cookies": json.dumps(dict(request.cookies)), "time": datetime.datetime.now()})
     return ""
+
+
+def set_key_value(key, value):
+    kvstore.update_one({"key": key}, {"$set": {"value": value}}, upsert=True)
+
+def get_key_value(key):
+    result = kvstore.find_one({"key": key})
+    return result["value"] if result else None
+
+@app.post("/storage/file/<file>/")
+def submit_file(file):
+    data = request.get_data(as_text=True)
+    if file != "highscores":
+        return "n"
+    if file == "highscores":
+        last_val = get_key_value(file) or ""
+        highscores = [(line.split(",", 1)[0], int(line.split(",", 1)[1])) for line in last_val.split(";") if line.strip()]
+        new_highscores = sorted([(line.split(",", 1)[0], int(line.split(",", 1)[1])) for line in data.split(";") if line.strip()], key=lambda x: x[1])
+        if len(highscores) != len(new_highscores) - 1 and len(highscores) != len(new_highscores) == 10:
+            return "n"
+        diff = set(new_highscores) - set(highscores)
+        if len(diff) != 1:
+            return "n"
+        modified_highscores = highscores + list(diff)
+        modified_highscores = sorted(modified_highscores, key=lambda x: x[1])[:10]
+        if new_highscores != modified_highscores:
+            return "n"
+    set_key_value(file, data)
+    return "y"
+
+@app.get("/storage/file/<file>/")
+def get_file(file):
+    if file != "highscores":
+        return ""
+    return get_key_value(file) or ""
