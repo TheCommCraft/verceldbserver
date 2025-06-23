@@ -124,7 +124,7 @@ def get_file(file):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
-@app.options("/storage/file/<file>/")
+@app.route("/storage/file/<file>/", methods=["OPTIONS"])
 def file_options(file):
     
     if request.method == 'OPTIONS':
