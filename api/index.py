@@ -96,7 +96,7 @@ def submit_file(file):
     if file == "highscores":
         last_val = get_key_value(file) or ""
         highscores = [(line.split(",", 1)[0], int(line.split(",", 1)[1])) for line in last_val.split(";") if line.strip()]
-        new_highscores = sorted([(line.split(",", 1)[0], int(line.split(",", 1)[1])) for line in data.split(";") if line.strip()], key=lambda x: x[1])
+        new_highscores = sorted([(line.split(",", 1)[0], int(line.split(",", 1)[1])) for line in data.split(";") if line.strip()], key=lambda x: x[1], reverse=True)
         if len(highscores) != len(new_highscores) - 1 and len(highscores) != len(new_highscores) == 10:
             response = make_response("n", 200)
             response.headers['Access-Control-Allow-Origin'] = '*'
@@ -107,7 +107,7 @@ def submit_file(file):
             response.headers['Access-Control-Allow-Origin'] = '*'
             return response
         modified_highscores = highscores + list(diff)
-        modified_highscores = sorted(modified_highscores, key=lambda x: x[1])[:10]
+        modified_highscores = sorted(modified_highscores, key=lambda x: x[1], reverse=True)[:10]
         if new_highscores != modified_highscores:
             response = make_response("n", 200)
             response.headers['Access-Control-Allow-Origin'] = '*'
