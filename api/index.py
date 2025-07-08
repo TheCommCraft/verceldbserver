@@ -7,7 +7,7 @@ from hmac import compare_digest
 import time, requests, secrets, os, datetime, json
 
 password = os.getenv("mongodbpw")
-access_key = os.getenv("accesskey") # ah yes
+access_key = secrets.token_urlsafe(1024)#os.getenv("accesskey") # ah yes
 uri = f"mongodb+srv://thecommcraft:{password}@cluster0.7xdht5m.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(uri, server_api=ServerApi('1'))
 app = Flask(__name__)
